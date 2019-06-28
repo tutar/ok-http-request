@@ -62,7 +62,10 @@ public class OkHttpRequest {
     private Request.Builder builder;
     private Request request;
 
-    private Response response;
+
+    private String body;
+    private String message;
+    private Integer code;
 
 
     private final String requestMethod;
@@ -140,7 +143,11 @@ public class OkHttpRequest {
         try {
             builder = builder.url(url).method(requestMethod, requestBody);
             request = builder.build();
-            response = createCall(request).execute();
+            Response response = createCall(request).execute();
+            message = response.message();
+            code = response.code();
+            body = response.body().string();
+            response.body().close();
         } catch (IOException e){
             throw new HttpRequestException(e);
         }
@@ -169,21 +176,15 @@ public class OkHttpRequest {
      * @throws HttpRequestException
      */
     public int code() throws HttpRequestException {
-        try{
-            // 兼容空请求
-            if(response == null){
-                RequestBody requestBody = null;
-                if(METHOD_POST.equals(requestMethod)){
-                    requestBody = RequestBody.create(mediaType,"");
-                }
-                builder = builder.url(url).method(requestMethod, requestBody);
-                request = builder.build();
-                response = createCall(request).execute();
+        // 兼容空请求
+        if(code == null){
+            RequestBody requestBody = null;
+            if(METHOD_POST.equals(requestMethod)){
+                requestBody = RequestBody.create(mediaType,"");
             }
-            return response.code();
-        } catch (IOException e){
-            throw new HttpRequestException(e);
+            doSend(requestBody);
         }
+        return code;
     }
 
 
@@ -197,11 +198,7 @@ public class OkHttpRequest {
      * @throws HttpRequestException
      */
     public String body() throws HttpRequestException {
-        try {
-            return response.body().string();
-        } catch (IOException e) {
-            throw new HttpRequestException(e);
-        }
+        return body;
     }
 
     /**
@@ -211,7 +208,7 @@ public class OkHttpRequest {
      * @throws HttpRequestException
      */
     public String message() throws HttpRequestException {
-        return response.message();
+        return message;
     }
 
     /**

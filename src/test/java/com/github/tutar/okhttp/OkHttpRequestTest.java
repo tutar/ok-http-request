@@ -509,7 +509,8 @@ public class OkHttpRequestTest extends ServerTestCase {
             thread.start();
         }
 
-        Thread.sleep(1000*60*3);
+//        Thread.sleep(1000*60*3);
+        Thread.sleep(60*3);
     }
 
     static class SimpleRequestThread implements Runnable{
