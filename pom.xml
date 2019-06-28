@@ -170,17 +170,5 @@
     </dependency>
   </dependencies>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>aupup-nexus</id>
-            <name>aupup-snapshots</name>
-            <url>http://172.16.11.66:8080/nexus/repository/maven-snapshots/</url>
-        </snapshotRepository>
-        <repository>
-            <id>aupup-nexus</id>
-            <name>aupup-releases</name>
-            <url>http://172.16.11.66:8080/nexus/repository/maven-releases/</url>
-        </repository>
-    </distributionManagement>
 
 </project>
